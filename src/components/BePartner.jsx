@@ -19,7 +19,7 @@ import Reveal, { Rule } from './Reveal.jsx'
 const EASE = [0.16, 1, 0.3, 1]
 
 /* ------------------------------------------------------------------ */
-/*  Partner paths — each is a three-step pipeline ending on a payoff.  */
+/*  Partner paths: each is a three-step pipeline ending on a payoff.  */
 /* ------------------------------------------------------------------ */
 
 const PATHS = [
@@ -31,22 +31,24 @@ const PATHS = [
     tagline: 'Know someone drowning in admin?',
     pitch: 'One intro. We do the rest. You get a cut of every project we ship.',
     stages: ['Spot', 'Intro', 'Earn'],
-    payoff: 'Commission on every referral · paid on invoice',
+    payoff: '15% on the first project · 10% on every project after · for 12 months',
+    footerLeft: 'No targets, no lock-in, start with one intro',
+    cta: 'Refer someone now',
     steps: [
       {
         icon: Radar,
         title: 'Spot the pain',
-        copy: 'A client, a supplier, a mate whose team is buried in manual work — that\u2019s a referral.',
+        copy: 'A client, a supplier, a mate whose team is buried in manual work. That\u2019s a referral.',
       },
       {
         icon: Handshake,
         title: 'Make the intro',
-        copy: 'One email or a warm handover. We scope it, build it and keep you in the loop.',
+        copy: 'One email or a warm handover. We scope it, build it and keep you in the loop. No hard sell, and you\u2019ll know the day it closes.',
       },
       {
         icon: Coins,
         title: 'Collect your cut',
-        copy: 'You earn on every project your intro becomes — for as long as they stay.',
+        copy: 'Earn 15% of your intro\u2019s first project, then 10% of every project after that for 12 months. Paid on invoice.',
       },
     ],
   },
@@ -58,12 +60,14 @@ const PATHS = [
     tagline: 'You build automations too?',
     pitch: 'Join the delivery pod. Real clients, real workflows, paid per build.',
     stages: ['Show', 'Ship', 'Scale'],
-    payoff: 'Paid per build · own a sector pod as we grow',
+    payoff: 'Paid per build · rates agreed up front',
+    footerLeft: 'No targets, no lock-in, start with one paired build',
+    cta: 'Send us your stack',
     steps: [
       {
         icon: Cpu,
         title: 'Show your stack',
-        copy: 'n8n, Make, Python, LLM pipelines — send us something you\u2019ve shipped and love.',
+        copy: 'n8n, Make, Python, LLM pipelines. Send us something you\u2019ve shipped and love.',
       },
       {
         icon: GitMerge,
@@ -73,7 +77,7 @@ const PATHS = [
       {
         icon: Rocket,
         title: 'Scale together',
-        copy: 'Take the lead on a sector you know inside-out and grow your book with ours.',
+        copy: 'Take the lead on a sector you know inside out and grow your book with ours.',
       },
     ],
   },
@@ -86,21 +90,23 @@ const PATHS = [
     pitch: 'Put our engine behind your brand. You own the client, we own the build.',
     stages: ['Plug in', 'Deliver', 'Recur'],
     payoff: 'Margin on every retainer · month after month',
+    footerLeft: 'No targets, no lock-in, start with one client',
+    cta: 'Partner your agency',
     steps: [
       {
         icon: Layers,
         title: 'Plug in the engine',
-        copy: 'Add DATAI automations to your offer — white-label or co-branded, your call.',
+        copy: 'Add DATAI automations to your offer. White-label or co-branded, your call.',
       },
       {
         icon: Users,
         title: 'You sell, we deliver',
-        copy: 'You keep the relationship. We handle scoping, builds, support and the on-call.',
+        copy: 'You keep the relationship and your brand stays on everything. We handle scoping, builds, support and the on-call, and we never contact your client directly.',
       },
       {
         icon: Repeat,
         title: 'Revenue on repeat',
-        copy: 'Every automation retainer pays you margin monthly — compounding as clients add workflows.',
+        copy: 'Every automation retainer pays you margin monthly, compounding as clients add workflows.',
       },
     ],
   },
@@ -402,7 +408,7 @@ function PartnerPipeline({ path }) {
 
       <div className="relative flex flex-wrap items-center justify-between gap-3 border-t border-line/50 px-5 py-4 sm:px-8">
         <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-mist/60">
-          No targets · no lock-in · start with one intro
+          {path.footerLeft}
         </span>
         <span
           className={`font-mono text-[10px] uppercase tracking-[0.2em] transition-colors duration-500 ${
@@ -474,7 +480,7 @@ export default function BePartner() {
           </h2>
           <Reveal delay={0.2} className="self-end">
             <p className="max-w-md leading-relaxed text-mist">
-              Three ways in — pick the track that fits, and watch how it plays out. Every one
+              Three ways in. Pick the track that fits and watch how it plays out. Every one
               starts with a single conversation.
             </p>
           </Reveal>
@@ -541,10 +547,21 @@ export default function BePartner() {
                 href="#contact"
                 className="cta-shimmer relative overflow-hidden border border-gold bg-gold px-8 py-4 text-center font-mono text-xs font-medium uppercase tracking-[0.2em] text-ink transition-transform duration-300 hover:-translate-y-0.5"
               >
-                Book a discovery call
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.span
+                    key={path.id}
+                    className="block"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.25, ease: EASE }}
+                  >
+                    {path.cta}
+                  </motion.span>
+                </AnimatePresence>
               </a>
               <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-mist/70">
-                Tell us your track — we&rsquo;ll map step one together
+                One call. We&rsquo;ll map step one together.
               </p>
             </div>
           </Reveal>
