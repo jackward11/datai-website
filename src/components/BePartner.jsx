@@ -33,7 +33,6 @@ const PATHS = [
     stages: ['Spot', 'Intro', 'Earn'],
     payoff: '15% on the first project · 10% on every project after · for 12 months',
     footerLeft: 'No targets, no lock-in, start with one intro',
-    cta: 'Refer someone now',
     steps: [
       {
         icon: Radar,
@@ -62,7 +61,6 @@ const PATHS = [
     stages: ['Show', 'Ship', 'Scale'],
     payoff: 'Paid per build · rates agreed up front',
     footerLeft: 'No targets, no lock-in, start with one paired build',
-    cta: 'Send us your stack',
     steps: [
       {
         icon: Cpu,
@@ -91,7 +89,6 @@ const PATHS = [
     stages: ['Plug in', 'Deliver', 'Recur'],
     payoff: 'Margin on every retainer · month after month',
     footerLeft: 'No targets, no lock-in, start with one client',
-    cta: 'Book a discovery call',
     steps: [
       {
         icon: Layers,
@@ -472,18 +469,49 @@ export default function BePartner() {
         <Rule className="mt-4" />
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
-          <h2 className="text-3xl font-bold leading-[1.08] tracking-tight sm:text-5xl">
-            <Reveal>Wanna have your part in</Reveal>
-            <Reveal delay={0.1}>
-              AI automations? <span className="gilded join-us-shimmer">Join us.</span>
+          <div>
+            <h2 className="text-3xl font-bold leading-[1.08] tracking-tight sm:text-5xl">
+              <Reveal>Wanna have your part in</Reveal>
+              <Reveal delay={0.1}>
+                AI automations? <span className="gilded join-us-shimmer">Join us.</span>
+              </Reveal>
+            </h2>
+            <Reveal delay={0.2}>
+              <p className="mt-6 max-w-md leading-relaxed text-mist">
+                Three ways in. Pick the track that fits and watch how it plays out. Every one
+                starts with a single conversation.
+              </p>
             </Reveal>
-          </h2>
-          <Reveal delay={0.2} className="self-end">
-            <p className="max-w-md leading-relaxed text-mist">
-              Three ways in. Pick the track that fits and watch how it plays out. Every one
-              starts with a single conversation.
-            </p>
-          </Reveal>
+          </div>
+
+          <div className="flex flex-col gap-4 lg:pt-2">
+            <Reveal delay={0.15}>
+              <a
+                href="#contact"
+                className="cta-shimmer relative block overflow-hidden border border-gold bg-gold px-8 py-4 text-center font-mono text-xs font-medium uppercase tracking-[0.2em] text-ink transition-transform duration-300 hover:-translate-y-0.5"
+              >
+                Book a discovery call
+              </a>
+            </Reveal>
+            <Reveal delay={0.25}>
+              <div className="flex gap-3">
+                {socials.map((s) => (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={s.label}
+                    className="flex h-11 w-11 items-center justify-center border border-line text-mist transition-all duration-300 hover:-translate-y-0.5 hover:border-gold hover:text-gold"
+                  >
+                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden>
+                      <path d={s.path} />
+                    </svg>
+                  </a>
+                ))}
+              </div>
+            </Reveal>
+          </div>
         </div>
 
         {/* Path selector */}
@@ -537,53 +565,6 @@ export default function BePartner() {
           <AnimatePresence mode="wait">
             <PartnerPipeline path={path} />
           </AnimatePresence>
-        </div>
-
-        {/* CTA */}
-        <div className="mt-10 flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
-          <Reveal>
-            <div className="flex flex-wrap items-center gap-4">
-              <a
-                href="#contact"
-                className="cta-shimmer relative overflow-hidden border border-gold bg-gold px-8 py-4 text-center font-mono text-xs font-medium uppercase tracking-[0.2em] text-ink transition-transform duration-300 hover:-translate-y-0.5"
-              >
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.span
-                    key={path.id}
-                    className="block"
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.25, ease: EASE }}
-                  >
-                    {path.cta}
-                  </motion.span>
-                </AnimatePresence>
-              </a>
-              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-mist/70">
-                One call. We&rsquo;ll map step one together.
-              </p>
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.1}>
-            <div className="flex gap-3">
-              {socials.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={s.label}
-                  className="flex h-11 w-11 items-center justify-center border border-line text-mist transition-all duration-300 hover:-translate-y-0.5 hover:border-gold hover:text-gold"
-                >
-                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden>
-                    <path d={s.path} />
-                  </svg>
-                </a>
-              ))}
-            </div>
-          </Reveal>
         </div>
       </div>
     </section>
