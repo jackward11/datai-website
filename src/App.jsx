@@ -4,6 +4,7 @@ import Automations from './components/Automations.jsx'
 import Sectors from './components/Sectors.jsx'
 import CallToAction from './components/CallToAction.jsx'
 import Testimonials from './components/Testimonials.jsx'
+import BePartner from './components/BePartner.jsx'
 import Footer from './components/Footer.jsx'
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
         <Sectors />
         <CallToAction />
         <Testimonials />
+        <BePartner />
       </main>
       <Footer />
     </div>
