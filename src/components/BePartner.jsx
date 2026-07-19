@@ -57,10 +57,10 @@ const PATHS = [
     label: 'Build',
     icon: Wrench,
     tagline: 'You build automations too?',
-    pitch: 'Join the delivery pod. Real clients, real workflows, paid per build.',
+    pitch: 'We find the clients. You build the automations. Paid per build.',
     stages: ['Show', 'Ship', 'Scale'],
     payoff: 'Paid per build · rates agreed up front',
-    footerLeft: 'No targets, no lock-in, start with one paired build',
+    footerLeft: 'No targets, no lock-in, start with one build',
     steps: [
       {
         icon: Cpu,
@@ -70,12 +70,12 @@ const PATHS = [
       {
         icon: GitMerge,
         title: 'Ship with us',
-        copy: 'Pair on a live client workflow with our playbooks, QA and human-in-the-loop standards.',
+        copy: 'Your first build is for a real client, not a test project. You build alongside our team, and our QA has your back before anything reaches them.',
       },
       {
         icon: Rocket,
         title: 'Scale together',
-        copy: 'Take the lead on a sector you know inside out and grow your book with ours.',
+        copy: 'Do good work and the builds keep coming. You never chase clients, we never miss a deadline.',
       },
     ],
   },
