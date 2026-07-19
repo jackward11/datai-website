@@ -1,53 +1,118 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import {
+  Radar,
+  Handshake,
+  Coins,
+  Wrench,
+  GitMerge,
+  Rocket,
+  Briefcase,
+  Cpu,
+  Repeat,
+  Users,
+  Megaphone,
+  Layers,
+} from 'lucide-react'
 import Reveal, { Rule } from './Reveal.jsx'
 
-/*
- * "Join the network" canvas animation.
- *
- * A constellation of gold nodes drifts and links up. Every few seconds a
- * recruit node flies in from off-screen, docks with the nearest node and
- * becomes part of the network with a pulse ring — the visual metaphor for
- * joining us. The visitor's cursor is wired into the network as well, so
- * they are literally already connected.
- */
+const EASE = [0.16, 1, 0.3, 1]
 
-const GOLD = { r: 212, g: 175, b: 55 }
-const GOLD_BRIGHT = { r: 245, g: 220, b: 138 }
+/* ------------------------------------------------------------------ */
+/*  Partner paths — each is a three-step pipeline ending on a payoff.  */
+/* ------------------------------------------------------------------ */
 
-function rgba({ r, g, b }, a) {
-  return `rgba(${r}, ${g}, ${b}, ${a})`
-}
+const PATHS = [
+  {
+    id: 'refer',
+    ref: 'P-01',
+    label: 'Refer',
+    icon: Megaphone,
+    tagline: 'Know someone drowning in admin?',
+    pitch: 'One intro. We do the rest. You get a cut of every project we ship.',
+    stages: ['Spot', 'Intro', 'Earn'],
+    payoff: 'Commission on every referral · paid on invoice',
+    steps: [
+      {
+        icon: Radar,
+        title: 'Spot the pain',
+        copy: 'A client, a supplier, a mate whose team is buried in manual work — that\u2019s a referral.',
+      },
+      {
+        icon: Handshake,
+        title: 'Make the intro',
+        copy: 'One email or a warm handover. We scope it, build it and keep you in the loop.',
+      },
+      {
+        icon: Coins,
+        title: 'Collect your cut',
+        copy: 'You earn on every project your intro becomes — for as long as they stay.',
+      },
+    ],
+  },
+  {
+    id: 'build',
+    ref: 'P-02',
+    label: 'Build',
+    icon: Wrench,
+    tagline: 'You build automations too?',
+    pitch: 'Join the delivery pod. Real clients, real workflows, paid per build.',
+    stages: ['Show', 'Ship', 'Scale'],
+    payoff: 'Paid per build · own a sector pod as we grow',
+    steps: [
+      {
+        icon: Cpu,
+        title: 'Show your stack',
+        copy: 'n8n, Make, Python, LLM pipelines — send us something you\u2019ve shipped and love.',
+      },
+      {
+        icon: GitMerge,
+        title: 'Ship with us',
+        copy: 'Pair on a live client workflow with our playbooks, QA and human-in-the-loop standards.',
+      },
+      {
+        icon: Rocket,
+        title: 'Scale together',
+        copy: 'Take the lead on a sector you know inside-out and grow your book with ours.',
+      },
+    ],
+  },
+  {
+    id: 'sell',
+    ref: 'P-03',
+    label: 'Sell',
+    icon: Briefcase,
+    tagline: 'Agency or consultant?',
+    pitch: 'Put our engine behind your brand. You own the client, we own the build.',
+    stages: ['Plug in', 'Deliver', 'Recur'],
+    payoff: 'Margin on every retainer · month after month',
+    steps: [
+      {
+        icon: Layers,
+        title: 'Plug in the engine',
+        copy: 'Add DATAI automations to your offer — white-label or co-branded, your call.',
+      },
+      {
+        icon: Users,
+        title: 'You sell, we deliver',
+        copy: 'You keep the relationship. We handle scoping, builds, support and the on-call.',
+      },
+      {
+        icon: Repeat,
+        title: 'Revenue on repeat',
+        copy: 'Every automation retainer pays you margin monthly — compounding as clients add workflows.',
+      },
+    ],
+  },
+]
 
-function createNode(w, h, joined = true) {
-  return {
-    x: Math.random() * w,
-    y: Math.random() * h,
-    vx: (Math.random() - 0.5) * 0.16,
-    vy: (Math.random() - 0.5) * 0.16,
-    r: 1.2 + Math.random() * 1.8,
-    bright: Math.random() < 0.25,
-    phase: Math.random() * Math.PI * 2,
-    joined,
-    glow: joined ? 0 : 1,
-  }
-}
+const STEP_MS = 2400
 
-function spawnRecruit(w, h) {
-  // Enter from a random edge, just outside the canvas.
-  const side = Math.floor(Math.random() * 4)
-  const n = createNode(w, h, false)
-  if (side === 0) { n.x = -30; n.y = Math.random() * h }
-  if (side === 1) { n.x = w + 30; n.y = Math.random() * h }
-  if (side === 2) { n.x = Math.random() * w; n.y = -30 }
-  if (side === 3) { n.x = Math.random() * w; n.y = h + 30 }
-  n.tx = w * (0.25 + Math.random() * 0.5)
-  n.ty = h * (0.25 + Math.random() * 0.5)
-  n.r = 2.4
-  n.bright = true
-  return n
-}
+/* ------------------------------------------------------------ */
+/*  Background: sparse gold constellation, kept from v1 but dim. */
+/* ------------------------------------------------------------ */
 
-function useJoinNetwork(canvasRef, sectionRef) {
+function useConstellation(canvasRef, sectionRef) {
   useEffect(() => {
     const canvas = canvasRef.current
     const section = sectionRef.current
@@ -55,18 +120,11 @@ function useJoinNetwork(canvasRef, sectionRef) {
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const ctx = canvas.getContext('2d')
-
     let w = 0
     let h = 0
     let raf = 0
     let running = false
     let nodes = []
-    let pulses = []
-    let recruit = null
-    let nextRecruitAt = 0
-    const pointer = { x: -9999, y: -9999, active: false }
-    const LINK_DIST = 130
-    const POINTER_DIST = 170
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect()
@@ -76,30 +134,26 @@ function useJoinNetwork(canvasRef, sectionRef) {
       canvas.width = Math.round(w * dpr)
       canvas.height = Math.round(h * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      const target = Math.max(26, Math.min(64, Math.round((w * h) / 16000)))
-      if (nodes.length === 0) {
-        nodes = Array.from({ length: target }, () => createNode(w, h))
-      } else if (nodes.length < target) {
-        nodes.push(...Array.from({ length: target - nodes.length }, () => createNode(w, h)))
-      } else {
-        nodes.length = target
-      }
+      const target = Math.max(18, Math.min(44, Math.round((w * h) / 26000)))
+      nodes = Array.from({ length: target }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.14,
+        vy: (Math.random() - 0.5) * 0.14,
+        r: 1 + Math.random() * 1.6,
+        phase: Math.random() * Math.PI * 2,
+      }))
     }
 
-    const drawFrame = (t) => {
+    const draw = (t) => {
       ctx.clearRect(0, 0, w, h)
-
-      // Links between nodes.
       for (let i = 0; i < nodes.length; i++) {
-        const a = nodes[i]
         for (let j = i + 1; j < nodes.length; j++) {
+          const a = nodes[i]
           const b = nodes[j]
-          const dx = a.x - b.x
-          const dy = a.y - b.y
-          const d = Math.hypot(dx, dy)
-          if (d < LINK_DIST) {
-            const alpha = (1 - d / LINK_DIST) * 0.16
-            ctx.strokeStyle = rgba(GOLD, alpha)
+          const d = Math.hypot(a.x - b.x, a.y - b.y)
+          if (d < 140) {
+            ctx.strokeStyle = `rgba(212, 175, 55, ${(1 - d / 140) * 0.1})`
             ctx.lineWidth = 1
             ctx.beginPath()
             ctx.moveTo(a.x, a.y)
@@ -108,75 +162,16 @@ function useJoinNetwork(canvasRef, sectionRef) {
           }
         }
       }
-
-      // Cursor is part of the network: brighter links to nearby nodes.
-      if (pointer.active) {
-        for (const n of nodes) {
-          const d = Math.hypot(n.x - pointer.x, n.y - pointer.y)
-          if (d < POINTER_DIST) {
-            const alpha = (1 - d / POINTER_DIST) * 0.42
-            ctx.strokeStyle = rgba(GOLD_BRIGHT, alpha)
-            ctx.lineWidth = 1
-            ctx.beginPath()
-            ctx.moveTo(n.x, n.y)
-            ctx.lineTo(pointer.x, pointer.y)
-            ctx.stroke()
-          }
-        }
-        ctx.fillStyle = rgba(GOLD_BRIGHT, 0.9)
-        ctx.beginPath()
-        ctx.arc(pointer.x, pointer.y, 2.6, 0, Math.PI * 2)
-        ctx.fill()
-      }
-
-      // Recruit trajectory line while flying in.
-      if (recruit) {
-        ctx.strokeStyle = rgba(GOLD_BRIGHT, 0.35)
-        ctx.setLineDash([3, 7])
-        ctx.lineWidth = 1
-        ctx.beginPath()
-        ctx.moveTo(recruit.x, recruit.y)
-        ctx.lineTo(recruit.tx, recruit.ty)
-        ctx.stroke()
-        ctx.setLineDash([])
-      }
-
-      // Nodes.
       for (const n of nodes) {
-        const twinkle = 0.55 + 0.45 * Math.sin(t / 900 + n.phase)
-        const base = n.bright ? GOLD_BRIGHT : GOLD
-        const alpha = (n.bright ? 0.85 : 0.55) * twinkle + n.glow * 0.4
-        if (n.glow > 0.01) {
-          ctx.fillStyle = rgba(GOLD_BRIGHT, n.glow * 0.18)
-          ctx.beginPath()
-          ctx.arc(n.x, n.y, n.r * 6, 0, Math.PI * 2)
-          ctx.fill()
-        }
-        ctx.fillStyle = rgba(base, Math.min(1, alpha))
+        const tw = 0.5 + 0.5 * Math.sin(t / 950 + n.phase)
+        ctx.fillStyle = `rgba(212, 175, 55, ${0.32 * tw + 0.1})`
         ctx.beginPath()
         ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2)
         ctx.fill()
       }
-
-      if (recruit) {
-        ctx.fillStyle = rgba(GOLD_BRIGHT, 0.95)
-        ctx.beginPath()
-        ctx.arc(recruit.x, recruit.y, recruit.r, 0, Math.PI * 2)
-        ctx.fill()
-      }
-
-      // Expanding welcome pulses.
-      pulses = pulses.filter((p) => p.a > 0.02)
-      for (const p of pulses) {
-        ctx.strokeStyle = rgba(GOLD_BRIGHT, p.a)
-        ctx.lineWidth = 1.4
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx.stroke()
-      }
     }
 
-    const step = (t) => {
+    const loop = (t) => {
       for (const n of nodes) {
         n.x += n.vx
         n.y += n.vy
@@ -184,39 +179,8 @@ function useJoinNetwork(canvasRef, sectionRef) {
         if (n.x > w + 10) n.x = -10
         if (n.y < -10) n.y = h + 10
         if (n.y > h + 10) n.y = -10
-        n.glow *= 0.985
       }
-
-      if (!recruit && t > nextRecruitAt) recruit = spawnRecruit(w, h)
-      if (recruit) {
-        const dx = recruit.tx - recruit.x
-        const dy = recruit.ty - recruit.y
-        const d = Math.hypot(dx, dy)
-        if (d < 4) {
-          recruit.joined = true
-          recruit.glow = 1
-          recruit.vx = (Math.random() - 0.5) * 0.16
-          recruit.vy = (Math.random() - 0.5) * 0.16
-          pulses.push({ x: recruit.x, y: recruit.y, r: 4, a: 0.6 })
-          nodes.push(recruit)
-          if (nodes.length > 72) nodes.shift()
-          recruit = null
-          nextRecruitAt = t + 2600 + Math.random() * 2200
-        } else {
-          recruit.x += (dx / d) * Math.min(3.2, d)
-          recruit.y += (dy / d) * Math.min(3.2, d)
-        }
-      }
-
-      for (const p of pulses) {
-        p.r += 1.5
-        p.a *= 0.96
-      }
-    }
-
-    const loop = (t) => {
-      step(t)
-      drawFrame(t)
+      draw(t)
       raf = requestAnimationFrame(loop)
     }
 
@@ -231,46 +195,230 @@ function useJoinNetwork(canvasRef, sectionRef) {
     }
 
     resize()
-    if (reduced) {
-      drawFrame(0)
-    }
+    if (reduced) draw(0)
 
     const io = new IntersectionObserver(
       ([entry]) => (entry.isIntersecting ? start() : stop()),
       { threshold: 0.05 },
     )
     io.observe(section)
-
     const ro = new ResizeObserver(() => {
       resize()
-      if (reduced) drawFrame(0)
+      if (reduced) draw(0)
     })
     ro.observe(canvas)
-
-    const onMove = (e) => {
-      const rect = canvas.getBoundingClientRect()
-      pointer.x = e.clientX - rect.left
-      pointer.y = e.clientY - rect.top
-      pointer.active =
-        pointer.x >= 0 && pointer.x <= rect.width && pointer.y >= 0 && pointer.y <= rect.height
-    }
-    const onLeave = () => {
-      pointer.active = false
-      pointer.x = -9999
-      pointer.y = -9999
-    }
-    section.addEventListener('pointermove', onMove)
-    section.addEventListener('pointerleave', onLeave)
 
     return () => {
       stop()
       io.disconnect()
       ro.disconnect()
-      section.removeEventListener('pointermove', onMove)
-      section.removeEventListener('pointerleave', onLeave)
     }
   }, [canvasRef, sectionRef])
 }
+
+/* --------------------------------------------------- */
+/*  The three-step pipeline that plays itself forward.  */
+/* --------------------------------------------------- */
+
+function StepCard({ step, index, state }) {
+  const Icon = step.icon
+  const active = state === 'active'
+  const done = state === 'done'
+
+  return (
+    <div
+      className={`partner-step relative flex flex-col gap-3 border p-5 transition-all duration-500 sm:p-6 ${
+        active
+          ? 'partner-step-active border-gold/60 bg-gold/[0.05]'
+          : done
+            ? 'border-gold/25 bg-ink/60'
+            : 'border-line bg-ink/60'
+      }`}
+    >
+      <div className="flex items-center justify-between">
+        <div
+          className={`flex h-11 w-11 items-center justify-center border transition-colors duration-500 ${
+            active || done ? 'border-gold/50 bg-gold/10' : 'border-line bg-transparent'
+          }`}
+        >
+          <Icon
+            className={`h-5 w-5 transition-colors duration-500 ${
+              active ? 'text-gold-bright' : done ? 'text-gold' : 'text-mist'
+            }`}
+            strokeWidth={1.5}
+          />
+        </div>
+        <span
+          className={`font-mono text-[11px] tracking-[0.2em] transition-colors duration-500 ${
+            active ? 'text-gold-bright' : done ? 'text-gold/70' : 'text-mist/50'
+          }`}
+        >
+          {done ? '✓' : `0${index + 1}`}
+        </span>
+      </div>
+      <h4
+        className={`font-display text-lg font-bold tracking-tight transition-colors duration-500 sm:text-xl ${
+          active || done ? 'text-chalk' : 'text-chalk/60'
+        }`}
+      >
+        {step.title}
+      </h4>
+      <p
+        className={`text-sm leading-relaxed transition-colors duration-500 ${
+          active ? 'text-mist' : 'text-mist/55'
+        }`}
+      >
+        {step.copy}
+      </p>
+    </div>
+  )
+}
+
+function FlowConnector({ lit, vertical = false }) {
+  return (
+    <div
+      className={`pointer-events-none flex items-center justify-center ${
+        vertical ? 'h-8 w-full' : 'h-full w-full'
+      }`}
+      aria-hidden
+    >
+      <svg
+        className={vertical ? 'h-full w-4' : 'h-4 w-full'}
+        viewBox={vertical ? '0 0 8 32' : '0 0 64 8'}
+        preserveAspectRatio="none"
+      >
+        <line
+          x1={vertical ? 4 : 0}
+          y1={vertical ? 0 : 4}
+          x2={vertical ? 4 : 64}
+          y2={vertical ? 32 : 4}
+          stroke="rgba(212,175,55,0.15)"
+          strokeWidth="2"
+        />
+        <line
+          x1={vertical ? 4 : 0}
+          y1={vertical ? 0 : 4}
+          x2={vertical ? 4 : 64}
+          y2={vertical ? 32 : 4}
+          stroke={lit ? '#d4af37' : 'transparent'}
+          strokeWidth="2"
+          strokeLinecap="round"
+          className="pipeline-flow"
+          style={{ transition: 'stroke 0.4s ease' }}
+        />
+      </svg>
+    </div>
+  )
+}
+
+function PartnerPipeline({ path }) {
+  const [step, setStep] = useState(0)
+
+  // Auto-play the pipeline: 0 → 1 → 2, hold on the payoff, loop.
+  useEffect(() => {
+    setStep(0)
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setStep(2)
+      return
+    }
+    const id = setInterval(() => {
+      setStep((s) => (s + 1) % (path.steps.length + 1))
+    }, STEP_MS)
+    return () => clearInterval(id)
+  }, [path])
+
+  // step === 3 is the "hold" beat where all three glow before looping.
+  const stateFor = (i) => {
+    if (step >= path.steps.length) return 'done'
+    if (i === step) return 'active'
+    if (i < step) return 'done'
+    return 'idle'
+  }
+
+  return (
+    <motion.div
+      key={path.id}
+      initial={{ opacity: 0, y: 18 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -12 }}
+      transition={{ duration: 0.45, ease: EASE }}
+      className="pipeline-shell relative overflow-hidden"
+    >
+      <div className="pipeline-atmosphere pointer-events-none absolute inset-0" aria-hidden />
+
+      <div className="relative flex flex-wrap items-end justify-between gap-3 border-b border-line/50 px-5 py-4 sm:px-8">
+        <div>
+          <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold">
+            {path.ref} / {path.label} track
+          </p>
+          <p className="mt-1 max-w-md text-sm text-mist">{path.pitch}</p>
+        </div>
+        <div className="hidden items-center gap-5 font-mono text-[10px] uppercase tracking-[0.22em] sm:flex">
+          {path.stages.map((s, i) => (
+            <span key={s} className="flex items-center gap-5">
+              <span
+                className={`transition-colors duration-400 ${
+                  stateFor(i) !== 'idle' ? 'text-gold/90' : 'text-mist/50'
+                }`}
+              >
+                {s}
+              </span>
+              {i < path.stages.length - 1 && <span className="text-line">→</span>}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div className="relative px-5 py-8 sm:px-8 sm:py-10">
+        {/* Desktop: three across with flowing connectors */}
+        <div className="hidden items-stretch gap-0 md:grid md:grid-cols-[1fr_56px_1fr_56px_1fr]">
+          <StepCard step={path.steps[0]} index={0} state={stateFor(0)} />
+          <FlowConnector lit={step >= 1} />
+          <StepCard step={path.steps[1]} index={1} state={stateFor(1)} />
+          <FlowConnector lit={step >= 2} />
+          <StepCard step={path.steps[2]} index={2} state={stateFor(2)} />
+        </div>
+
+        {/* Mobile: stacked with vertical connectors */}
+        <div className="flex flex-col md:hidden">
+          <StepCard step={path.steps[0]} index={0} state={stateFor(0)} />
+          <FlowConnector lit={step >= 1} vertical />
+          <StepCard step={path.steps[1]} index={1} state={stateFor(1)} />
+          <FlowConnector lit={step >= 2} vertical />
+          <StepCard step={path.steps[2]} index={2} state={stateFor(2)} />
+        </div>
+
+        {/* Progress rail */}
+        <div className="mt-7 h-px w-full bg-line-soft">
+          <div
+            className="h-full bg-gradient-to-r from-gold-deep via-gold to-gold-bright"
+            style={{
+              width: `${Math.min(1, (step + 1) / (path.steps.length + 1)) * 100}%`,
+              transition: `width ${STEP_MS}ms linear`,
+            }}
+          />
+        </div>
+      </div>
+
+      <div className="relative flex flex-wrap items-center justify-between gap-3 border-t border-line/50 px-5 py-4 sm:px-8">
+        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-mist/60">
+          No targets · no lock-in · start with one intro
+        </span>
+        <span
+          className={`font-mono text-[10px] uppercase tracking-[0.2em] transition-colors duration-500 ${
+            step >= path.steps.length - 1 ? 'text-gold' : 'text-gold/40'
+          }`}
+        >
+          {path.payoff}
+        </span>
+      </div>
+    </motion.div>
+  )
+}
+
+/* ------------------- */
+/*  The full section.  */
+/* ------------------- */
 
 const socials = [
   {
@@ -293,64 +441,130 @@ const socials = [
 export default function BePartner() {
   const sectionRef = useRef(null)
   const canvasRef = useRef(null)
-  useJoinNetwork(canvasRef, sectionRef)
+  const [active, setActive] = useState(0)
+  useConstellation(canvasRef, sectionRef)
+
+  const path = PATHS[active]
 
   return (
     <section id="partner" ref={sectionRef} className="relative overflow-hidden py-24 sm:py-32">
-      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden />
-      {/* Legibility gradient over the canvas, heavier on the text side. */}
+      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full opacity-70" aria-hidden />
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/80 via-black/35 to-black/10"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/85 via-black/50 to-black/85"
         aria-hidden
       />
 
-      <div className="pointer-events-none relative mx-auto max-w-7xl px-5 sm:px-8">
-        <div className="reg-marks pointer-events-auto max-w-2xl border border-line bg-ink/70 p-8 backdrop-blur-sm sm:p-14">
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
+        <div className="flex items-baseline justify-between gap-6">
           <Reveal>
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-gold">05 / Be a partner</p>
           </Reveal>
-          <Rule className="mt-4" />
+          <Reveal delay={0.1}>
+            <p className="hidden font-mono text-xs uppercase tracking-[0.3em] text-mist sm:block">DATAI</p>
+          </Reveal>
+        </div>
+        <Rule className="mt-4" />
 
-          <h2 className="mt-10 text-3xl font-bold leading-[1.08] tracking-tight sm:text-5xl">
-            <Reveal>Wanna have your part</Reveal>
-            <Reveal delay={0.1}>in AI automations?</Reveal>
-            <Reveal delay={0.2}>
-              <span className="gilded join-us-shimmer">Join us.</span>
+        <div className="mt-10 grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
+          <h2 className="text-3xl font-bold leading-[1.08] tracking-tight sm:text-5xl">
+            <Reveal>Wanna have your part in</Reveal>
+            <Reveal delay={0.1}>
+              AI automations? <span className="gilded join-us-shimmer">Join us.</span>
             </Reveal>
           </h2>
-
-          <Reveal delay={0.28}>
-            <p className="mt-6 max-w-xl leading-relaxed text-mist sm:text-lg">
-              Partner with us, refer a workflow, or bring your skills to the team. Book a
-              discovery call to get started, or connect on social.
+          <Reveal delay={0.2} className="self-end">
+            <p className="max-w-md leading-relaxed text-mist">
+              Three ways in — pick the track that fits, and watch how it plays out. Every one
+              starts with a single conversation.
             </p>
           </Reveal>
+        </div>
 
-          <Reveal delay={0.36}>
-            <div className="mt-10 flex flex-col gap-5">
+        {/* Path selector */}
+        <Reveal delay={0.25}>
+          <div className="mt-12 grid gap-px border border-line bg-line sm:grid-cols-3">
+            {PATHS.map((p, i) => {
+              const Icon = p.icon
+              const selected = i === active
+              return (
+                <button
+                  key={p.id}
+                  onClick={() => setActive(i)}
+                  className={`relative flex items-center gap-4 px-5 py-4 text-left transition-colors sm:px-6 sm:py-5 ${
+                    selected ? 'bg-panel' : 'bg-ink hover:bg-panel/60'
+                  }`}
+                >
+                  <span
+                    className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-gold-deep via-gold to-gold-bright transition-opacity duration-300"
+                    style={{ opacity: selected ? 1 : 0 }}
+                    aria-hidden
+                  />
+                  <span
+                    className={`flex h-11 w-11 shrink-0 items-center justify-center border transition-colors ${
+                      selected ? 'border-gold/50 bg-gold/10' : 'border-line'
+                    }`}
+                  >
+                    <Icon
+                      className={`h-5 w-5 ${selected ? 'text-gold-bright' : 'text-mist'}`}
+                      strokeWidth={1.5}
+                    />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="flex items-baseline gap-2">
+                      <span className={`font-mono text-[10px] tracking-[0.2em] ${selected ? 'text-gold' : 'text-mist/60'}`}>
+                        {p.ref}
+                      </span>
+                      <span className={`font-display text-lg font-bold ${selected ? 'text-chalk' : 'text-chalk/70'}`}>
+                        {p.label}
+                      </span>
+                    </span>
+                    <span className="block truncate text-sm text-mist">{p.tagline}</span>
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+        </Reveal>
+
+        {/* Animated three-step pipeline for the selected path */}
+        <div className="mt-6">
+          <AnimatePresence mode="wait">
+            <PartnerPipeline path={path} />
+          </AnimatePresence>
+        </div>
+
+        {/* CTA */}
+        <div className="mt-10 flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
+          <Reveal>
+            <div className="flex flex-wrap items-center gap-4">
               <a
                 href="#contact"
                 className="cta-shimmer relative overflow-hidden border border-gold bg-gold px-8 py-4 text-center font-mono text-xs font-medium uppercase tracking-[0.2em] text-ink transition-transform duration-300 hover:-translate-y-0.5"
               >
                 Book a discovery call
               </a>
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-mist/70">
+                Tell us your track — we&rsquo;ll map step one together
+              </p>
+            </div>
+          </Reveal>
 
-              <div className="flex gap-3">
-                {socials.map((s) => (
-                  <a
-                    key={s.label}
-                    href={s.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={s.label}
-                    className="flex h-11 w-11 items-center justify-center border border-line text-mist transition-all duration-300 hover:-translate-y-0.5 hover:border-gold hover:text-gold"
-                  >
-                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden>
-                      <path d={s.path} />
-                    </svg>
-                  </a>
-                ))}
-              </div>
+          <Reveal delay={0.1}>
+            <div className="flex gap-3">
+              {socials.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={s.label}
+                  className="flex h-11 w-11 items-center justify-center border border-line text-mist transition-all duration-300 hover:-translate-y-0.5 hover:border-gold hover:text-gold"
+                >
+                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden>
+                    <path d={s.path} />
+                  </svg>
+                </a>
+              ))}
             </div>
           </Reveal>
         </div>
