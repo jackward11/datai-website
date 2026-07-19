@@ -15,9 +15,9 @@ export default function App() {
         <Hero />
         <Automations />
         <Sectors />
-        <CallToAction />
         <Testimonials />
         <BePartner />
+        <CallToAction />
       </main>
       <Footer />
     </div>
