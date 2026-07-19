@@ -91,7 +91,7 @@ const PATHS = [
     stages: ['Plug in', 'Deliver', 'Recur'],
     payoff: 'Margin on every retainer · month after month',
     footerLeft: 'No targets, no lock-in, start with one client',
-    cta: 'Partner your agency',
+    cta: 'Book a discovery call',
     steps: [
       {
         icon: Layers,
