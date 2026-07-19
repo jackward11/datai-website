@@ -423,24 +423,6 @@ function PartnerPipeline({ path }) {
 /*  The full section.  */
 /* ------------------- */
 
-const socials = [
-  {
-    label: 'LinkedIn',
-    href: 'https://www.linkedin.com',
-    path: 'M4.98 3.5a2.49 2.49 0 1 1-.02 4.98 2.49 2.49 0 0 1 .02-4.98zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.5c0-1.31-.03-3-1.83-3-1.83 0-2.11 1.43-2.11 2.9V21H9z',
-  },
-  {
-    label: 'Instagram',
-    href: 'https://www.instagram.com',
-    path: 'M12 2.2c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92C2.21 15.58 2.2 15.2 2.2 12s.01-3.58.07-4.85C2.42 3.92 3.94 2.38 7.15 2.27 8.42 2.21 8.8 2.2 12 2.2zm0 3.7a6.1 6.1 0 1 0 0 12.2 6.1 6.1 0 0 0 0-12.2zm0 2.2a3.9 3.9 0 1 1 0 7.8 3.9 3.9 0 0 1 0-7.8zm6.35-3.8a1.43 1.43 0 1 0 0 2.86 1.43 1.43 0 0 0 0-2.86z',
-  },
-  {
-    label: 'X',
-    href: 'https://x.com',
-    path: 'M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.67l7.73-8.84L1.25 2.25h6.83l4.71 6.23zm-1.16 17.52h1.83L7.08 4.13H5.12z',
-  },
-]
-
 export default function BePartner() {
   const sectionRef = useRef(null)
   const canvasRef = useRef(null)
@@ -484,7 +466,7 @@ export default function BePartner() {
             </Reveal>
           </div>
 
-          <div className="flex flex-col gap-4 lg:pt-2">
+          <div className="flex flex-col lg:pt-2">
             <Reveal delay={0.15}>
               <a
                 href="#contact"
@@ -492,24 +474,6 @@ export default function BePartner() {
               >
                 Book a discovery call
               </a>
-            </Reveal>
-            <Reveal delay={0.25}>
-              <div className="flex gap-3">
-                {socials.map((s) => (
-                  <a
-                    key={s.label}
-                    href={s.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={s.label}
-                    className="flex h-11 w-11 items-center justify-center border border-line text-mist transition-all duration-300 hover:-translate-y-0.5 hover:border-gold hover:text-gold"
-                  >
-                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden>
-                      <path d={s.path} />
-                    </svg>
-                  </a>
-                ))}
-              </div>
             </Reveal>
           </div>
         </div>
