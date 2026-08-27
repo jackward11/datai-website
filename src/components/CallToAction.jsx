@@ -6,7 +6,7 @@ export default function CallToAction() {
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="reg-marks border border-line bg-ink/80 p-8 backdrop-blur-sm sm:p-14">
           <Reveal>
-            <p className="font-mono text-xs uppercase tracking-[0.3em] text-gold">03 / Next step</p>
+            <p className="font-mono text-xs uppercase tracking-[0.3em] text-gold">04 / Next step</p>
           </Reveal>
           <Rule className="mt-4" />
 
@@ -22,7 +22,7 @@ export default function CallToAction() {
                 <p className="mt-6 max-w-xl leading-relaxed text-mist sm:text-lg">
                   Book a free 30-minute workflow audit. We&rsquo;ll map your biggest time
                   drains, show you what automation would look like, and give you an honest
-                  ROI estimate — no obligation.
+                  ROI estimate. No obligation.
                 </p>
               </Reveal>
             </div>
