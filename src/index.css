@@ -169,7 +169,8 @@ h1, h2, h3, h4 {
   .ticker-track,
   .flow-line,
   .scroll-hint,
-  .pipeline-flow {
+  .pipeline-flow,
+  .partner-step-active {
     animation: none;
   }
 }
@@ -268,4 +269,13 @@ h1, h2, h3, h4 {
     grid-template-rows: 1fr;
     opacity: 1;
   }
+}
+
+@keyframes partner-step-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.0), inset 0 1px 0 rgba(245, 220, 138, 0.08); }
+  50% { box-shadow: 0 0 28px 0 rgba(212, 175, 55, 0.16), inset 0 1px 0 rgba(245, 220, 138, 0.12); }
+}
+
+.partner-step-active {
+  animation: partner-step-glow 1.6s ease-in-out infinite;
 }

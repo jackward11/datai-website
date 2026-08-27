@@ -105,7 +105,7 @@ export default function Testimonials() {
     <section id="testimonials" className="relative border-y border-line bg-ink-soft py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading
-          index="04"
+          index="05"
           eyebrow="Client stories"
           title="Hear it from the people who run on DATAI"
           copy="Real operators, real workflows, real hours back. Press play on any story below."

@@ -1,10 +1,14 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import logo from '../assets/logo-gold.png'
 
+const base = import.meta.env.BASE_URL
+
 const links = [
-  { label: 'Builds', href: '#automations', index: '01' },
-  { label: 'Sectors', href: '#sectors', index: '02' },
-  { label: 'Stories', href: '#testimonials', index: '03' },
+  { label: 'Builds', href: `${base}#automations`, index: '01' },
+  { label: 'Sectors', href: `${base}#sectors`, index: '02' },
+  { label: 'Try it', href: `${base}#try-it`, index: '03' },
+  { label: 'Stories', href: `${base}#testimonials`, index: '05' },
 ]
 
 export default function Nav() {
@@ -13,9 +17,9 @@ export default function Nav() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-line/30 bg-black/60 backdrop-blur-md">
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
-        <a href="#top" className="flex items-center">
+        <Link to="/" className="flex items-center">
           <img src={logo} alt="DATAI — Automating The Complex" className="logo-lift h-10 w-auto select-none" draggable="false" />
-        </a>
+        </Link>
 
         <div className="hidden items-center md:flex">
           {links.map((l) => (
