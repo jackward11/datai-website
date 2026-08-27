@@ -1,22 +1,59 @@
+import { Link } from 'react-router-dom'
 import logo from '../assets/logo-gold.png'
 
 const columns = [
   {
+    title: 'Solutions',
+    links: [
+      { label: 'ISO 19650', to: '/iso-19650' },
+      { label: 'Care', to: '/care' },
+      { label: 'Recruitment', to: '/recruitment' },
+      { label: 'Partners', to: '/partners' },
+    ],
+  },
+  {
     title: 'Sectors',
-    links: ['Construction', 'Recruitment', 'Insurance', 'Care sector', 'Property'],
-    href: '#sectors',
+    links: [
+      { label: 'Construction', href: '/#sectors' },
+      { label: 'Recruitment', to: '/recruitment' },
+      { label: 'Insurance', href: '/#sectors' },
+      { label: 'Care sector', to: '/care' },
+      { label: 'Property', href: '/#sectors' },
+    ],
   },
   {
     title: 'Automations',
-    links: ['Data automations', 'Marketing', 'Sales', 'Finance', 'Admin'],
-    href: '#automations',
+    links: [
+      { label: 'Data automations', href: '/#automations' },
+      { label: 'Marketing', href: '/#automations' },
+      { label: 'Sales', href: '/#automations' },
+      { label: 'Finance', href: '/#automations' },
+      { label: 'Admin', href: '/#automations' },
+    ],
   },
   {
     title: 'Company',
-    links: ['Client stories', 'Book a call'],
-    href: '#testimonials',
+    links: [
+      { label: 'Client stories', href: '/#testimonials' },
+      { label: 'Book a call', href: '/#contact' },
+    ],
   },
 ]
+
+function FooterLink({ link }) {
+  if (link.to) {
+    return (
+      <Link to={link.to} className="text-sm text-mist transition-colors hover:text-chalk">
+        {link.label}
+      </Link>
+    )
+  }
+  return (
+    <a href={link.href} className="text-sm text-mist transition-colors hover:text-chalk">
+      {link.label}
+    </a>
+  )
+}
 
 export default function Footer() {
   return (
@@ -24,14 +61,14 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2">
-            <a href="#top" className="inline-block">
+            <Link to="/" className="inline-block">
               <img
                 src={logo}
                 alt="DATAI — Automating The Complex"
                 className="logo-lift h-12 w-auto select-none"
                 draggable="false"
               />
-            </a>
+            </Link>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-mist">
               We connect every app, document and workflow, then let AI handle the repetitive
               work — with a human in the loop. Hours become minutes. Costs become savings.
@@ -45,10 +82,8 @@ export default function Footer() {
               </h4>
               <ul className="mt-5 flex flex-col gap-2.5">
                 {col.links.map((l) => (
-                  <li key={l}>
-                    <a href={col.href} className="text-sm text-mist transition-colors hover:text-chalk">
-                      {l}
-                    </a>
+                  <li key={l.label}>
+                    <FooterLink link={l} />
                   </li>
                 ))}
               </ul>
