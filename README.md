@@ -12,8 +12,18 @@ Marketing site for DATAI ("Automating The Complex") — AI automation for constr
 
 ```bash
 npm install
-npm run dev      # http://localhost:5173
-npm run build    # production build to dist/
+npm run dev         # main React site → http://localhost:5173
+npm run dev:uikit   # UIkit localhost example → http://localhost:5174
+npm run build       # production build to dist/
+```
+
+### UIkit localhost example
+
+A standalone DATAI-themed page built with [UIkit](https://getuikit.com/) lives in `uikit-example/`. It uses local UIkit CSS/JS (no CDN) so you can try the framework before wiring it into the main app.
+
+```bash
+npm run dev:uikit
+# open http://localhost:5174
 ```
 
 ## Where to customise

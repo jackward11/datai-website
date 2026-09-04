@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="DATAI UIkit localhost example — Automating The Complex"
+    />
+    <title>DATAI — UIkit localhost example</title>
+    <link rel="icon" type="image/png" href="./favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/uikit.min.css" />
+    <link rel="stylesheet" href="./theme.css" />
+  </head>
+  <body>
+    <!-- Nav -->
+    <header class="site-header" uk-sticky="show-on-up: true; animation: uk-animation-slide-top; sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
+      <nav class="uk-navbar-container uk-navbar-transparent">
+        <div class="uk-container uk-container-expand">
+          <div uk-navbar>
+            <div class="uk-navbar-left">
+              <a class="uk-navbar-item uk-logo" href="#top">
+                <img class="site-logo" src="./logo-gold.png" alt="DATAI" width="120" height="40" />
+              </a>
+            </div>
+            <div class="uk-navbar-right">
+              <ul class="uk-navbar-nav uk-visible@m">
+                <li><a href="#builds">Builds</a></li>
+                <li><a href="#sectors">Sectors</a></li>
+                <li><a href="#contact">Contact</a></li>
+              </ul>
+              <div class="uk-navbar-item uk-visible@m">
+                <a class="uk-button uk-button-primary btn-gold" href="#contact">Book a call</a>
+              </div>
+              <a class="uk-navbar-toggle uk-hidden@m" href="#offcanvas-nav" uk-toggle>
+                <span uk-navbar-toggle-icon></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <div id="offcanvas-nav" uk-offcanvas="overlay: true; mode: push">
+      <div class="uk-offcanvas-bar offcanvas-bar">
+        <button class="uk-offcanvas-close" type="button" uk-close></button>
+        <ul class="uk-nav uk-nav-default uk-margin-medium-top">
+          <li><a href="#builds" uk-scroll>Builds</a></li>
+          <li><a href="#sectors" uk-scroll>Sectors</a></li>
+          <li><a href="#contact" uk-scroll>Contact</a></li>
+        </ul>
+        <a class="uk-button uk-button-primary btn-gold uk-margin-medium-top" href="#contact">Book a call</a>
+      </div>
+    </div>
+
+    <main id="top">
+      <!-- Hero: brand + one headline + one line + CTAs + atmosphere -->
+      <section class="hero" uk-height-viewport="offset-top: true">
+        <div class="hero-bg" aria-hidden="true"></div>
+        <div class="hero-grain" aria-hidden="true"></div>
+        <div class="uk-container uk-container-large hero-inner">
+          <p class="hero-eyebrow" uk-scrollspy="cls: uk-animation-slide-bottom-small; delay: 80">
+            Automating the complex
+          </p>
+          <h1 class="hero-title" uk-scrollspy="cls: uk-animation-slide-bottom-small; delay: 160">
+            Automate the work slowing down your business
+            <span class="gilded">to unlock real ROI.</span>
+          </h1>
+          <p class="hero-copy" uk-scrollspy="cls: uk-animation-slide-bottom-small; delay: 240">
+            We connect your apps, documents and workflows — then let AI handle the repetitive work,
+            with a human in the loop where it matters.
+          </p>
+          <div class="hero-actions" uk-scrollspy="cls: uk-animation-slide-bottom-small; delay: 320">
+            <a class="uk-button uk-button-primary btn-gold" href="#contact">Book a discovery call</a>
+            <a class="uk-button uk-button-default btn-ghost" href="#builds">See how it works</a>
+          </div>
+        </div>
+        <p class="scroll-hint" aria-hidden="true">Scroll to explore</p>
+      </section>
+
+      <!-- Builds -->
+      <section id="builds" class="section section-panel">
+        <div class="uk-container uk-container-large">
+          <div class="section-head" uk-scrollspy="cls: uk-animation-fade; delay: 50">
+            <p class="section-index">01 / What we build</p>
+            <hr class="section-rule" />
+            <div class="uk-grid-large" uk-grid>
+              <div class="uk-width-3-5@m">
+                <h2 class="section-title">Automations for every corner of your business</h2>
+              </div>
+              <div class="uk-width-2-5@m uk-flex uk-flex-bottom">
+                <p class="section-copy">
+                  Pick a workflow type — data, marketing, sales, finance or admin — and we wire it to run while you sleep.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <ul class="uk-tab uk-tab-left@m build-tabs" uk-tab="connect: #build-switcher; animation: uk-animation-fade">
+            <li class="uk-active"><a href="#">Data</a></li>
+            <li><a href="#">Marketing</a></li>
+            <li><a href="#">Sales</a></li>
+            <li><a href="#">Finance</a></li>
+            <li><a href="#">Admin</a></li>
+          </ul>
+
+          <ul id="build-switcher" class="uk-switcher build-panels">
+            <li>
+              <h3>One source of truth, assembled while you sleep</h3>
+              <p>Extract, clean, reconcile and sync data across every system — dashboards stay live and reports build themselves.</p>
+              <ul class="build-list">
+                <li>Document and invoice extraction</li>
+                <li>CRM / finance / ops sync</li>
+                <li>Live KPI dashboards</li>
+                <li>Auto-compiled board packs</li>
+              </ul>
+            </li>
+            <li>
+              <h3>Campaigns that write, send and learn on their own</h3>
+              <p>Content pipelines, lead magnets and nurture sequences — your brand voice, our automation engine.</p>
+              <ul class="build-list">
+                <li>AI-drafted campaigns with approval gates</li>
+                <li>Lead scoring from every touchpoint</li>
+                <li>Timed review & referral requests</li>
+                <li>Monthly performance reports</li>
+              </ul>
+            </li>
+            <li>
+              <h3>A pipeline that follows up so your team can close</h3>
+              <p>Every enquiry answered, qualified and booked in — no lead left cold.</p>
+              <ul class="build-list">
+                <li>24/7 enquiry response</li>
+                <li>CRM updates from calls and email</li>
+                <li>Quote generation from pricing rules</li>
+                <li>Follow-up until a decision</li>
+              </ul>
+            </li>
+            <li>
+              <h3>Books that close themselves — with you in control</h3>
+              <p>Invoices, expenses and bank feeds reconciled automatically. Exceptions land on your desk.</p>
+              <ul class="build-list">
+                <li>Invoice extraction into Xero / QuickBooks</li>
+                <li>Bank reconciliation with alerts</li>
+                <li>Month-end packs for review</li>
+                <li>Supplier payments with approvals</li>
+              </ul>
+            </li>
+            <li>
+              <h3>The back office, minus the busywork</h3>
+              <p>Inboxes triaged, diaries managed, documents filed — the invisible work that keeps a business running.</p>
+              <ul class="build-list">
+                <li>Inbox triage with drafted replies</li>
+                <li>Meeting notes and actions</li>
+                <li>Client / hire onboarding packs</li>
+                <li>Compliance registers & chasing</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Sectors -->
+      <section id="sectors" class="section">
+        <div class="uk-container uk-container-large">
+          <div class="section-head" uk-scrollspy="cls: uk-animation-fade; delay: 50">
+            <p class="section-index">02 / Sectors</p>
+            <hr class="section-rule" />
+            <div class="uk-grid-large" uk-grid>
+              <div class="uk-width-3-5@m">
+                <h2 class="section-title">Deep experience where admin hurts the most</h2>
+              </div>
+              <div class="uk-width-2-5@m uk-flex uk-flex-bottom">
+                <p class="section-copy">
+                  Construction, recruitment, insurance, care and property — the playbook transfers wherever hours disappear into portals and spreadsheets.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="uk-grid-collapse uk-child-width-1-2@s uk-child-width-1-3@m sector-grid"
+            uk-grid
+            uk-scrollspy="target: > div; cls: uk-animation-slide-bottom-small; delay: 80"
+          >
+            <div>
+              <article class="sector-tile">
+                <h3>Construction</h3>
+                <p>Site diaries, RFIs and snagging lists that file themselves.</p>
+              </article>
+            </div>
+            <div>
+              <article class="sector-tile">
+                <h3>Recruitment</h3>
+                <p>Candidates sourced, screened and compliance-checked before the phone rings.</p>
+              </article>
+            </div>
+            <div>
+              <article class="sector-tile">
+                <h3>Insurance</h3>
+                <p>FNOL to a triaged claim file in minutes, not days.</p>
+              </article>
+            </div>
+            <div>
+              <article class="sector-tile">
+                <h3>Care</h3>
+                <p>Rotas, notes and CQC evidence handled in the background.</p>
+              </article>
+            </div>
+            <div>
+              <article class="sector-tile">
+                <h3>Property</h3>
+                <p>Lettings, sales progression and block management in sync.</p>
+              </article>
+            </div>
+            <div>
+              <article class="sector-tile sector-tile-cta">
+                <h3>Your sector next</h3>
+                <p>Tell us where the hours go — we map the automation.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact -->
+      <section id="contact" class="section section-panel">
+        <div class="uk-container uk-container-large">
+          <div class="cta-panel" uk-scrollspy="cls: uk-animation-fade">
+            <p class="section-index">03 / Next step</p>
+            <hr class="section-rule" />
+            <div class="uk-grid-large uk-flex-middle" uk-grid>
+              <div class="uk-width-3-5@m">
+                <h2 class="section-title">
+                  Where do your hours go?
+                  <span class="gilded">Let’s get them back.</span>
+                </h2>
+                <p class="section-copy uk-margin-medium-top">
+                  Book a free 30-minute workflow audit. We’ll map your biggest time drains and give you an honest ROI estimate — no obligation.
+                </p>
+              </div>
+              <div class="uk-width-2-5@m">
+                <div class="cta-actions">
+                  <a class="uk-button uk-button-primary btn-gold uk-width-1-1" href="mailto:hello@datai.co.uk">
+                    Book your free audit
+                  </a>
+                  <a class="uk-button uk-button-default btn-ghost uk-width-1-1" href="mailto:hello@datai.co.uk">
+                    hello@datai.co.uk
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="uk-container uk-container-large">
+        <div class="uk-grid-large" uk-grid>
+          <div class="uk-width-2-5@m">
+            <img class="site-logo" src="./logo-gold.png" alt="DATAI" width="140" height="46" />
+            <p class="footer-copy">
+              We connect every app, document and workflow, then let AI handle the repetitive work — with a human in the loop.
+            </p>
+          </div>
+          <div class="uk-width-1-5@s">
+            <h4 class="footer-heading">Sectors</h4>
+            <ul class="uk-list footer-list">
+              <li><a href="#sectors">Construction</a></li>
+              <li><a href="#sectors">Recruitment</a></li>
+              <li><a href="#sectors">Insurance</a></li>
+            </ul>
+          </div>
+          <div class="uk-width-1-5@s">
+            <h4 class="footer-heading">Automations</h4>
+            <ul class="uk-list footer-list">
+              <li><a href="#builds">Data</a></li>
+              <li><a href="#builds">Sales</a></li>
+              <li><a href="#builds">Finance</a></li>
+            </ul>
+          </div>
+          <div class="uk-width-1-5@s">
+            <h4 class="footer-heading">Company</h4>
+            <ul class="uk-list footer-list">
+              <li><a href="#contact">Book a call</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2026 DATAI Ltd</p>
+          <p>Work smarter / Scale faster</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="./js/uikit.min.js"></script>
+    <script src="./js/uikit-icons.min.js"></script>
+  </body>
+</html>
