@@ -12,6 +12,8 @@ export default defineConfig({
     port: 5174,
     strictPort: true,
     host: true,
+    // Allow Cloudflare quick tunnels / other preview hosts
+    allowedHosts: true,
   },
   build: {
     outDir: resolve(root, '../dist-uikit-example'),
